@@ -53,6 +53,7 @@ export default function DBHDIDDashboard() {
 
   const totalYouth = cmhcData.reduce((sum, c) => sum + c.caseload, 0);
   const avgOutcome = Math.round(cmhcData.reduce((sum, c) => sum + c.outcomeImprovement, 0) / cmhcData.length);
+  const avgComplexity = (cmhcData.reduce((sum, c) => sum + c.avgIntakeComplexity, 0) / cmhcData.length).toFixed(2);
 
   // Draw Sankey-style flow diagram
   useEffect(() => {
@@ -367,15 +368,15 @@ export default function DBHDIDDashboard() {
         </div>
         
         <div style={{
-          background: 'rgba(139, 92, 246, 0.1)',
-          border: '1px solid rgba(139, 92, 246, 0.3)',
+          background: 'rgba(249, 115, 22, 0.1)',
+          border: '1px solid rgba(249, 115, 22, 0.3)',
           borderRadius: '12px',
           padding: '20px',
           textAlign: 'center',
         }}>
-          <div style={{ fontSize: '32px', fontWeight: '700', color: '#a78bfa' }}>14</div>
+          <div style={{ fontSize: '32px', fontWeight: '700', color: '#f97316' }}>{avgComplexity}</div>
           <div style={{ color: '#94a3b8', fontSize: '13px', marginTop: '4px' }}>
-            Regional CMHCs
+            Avg. Intake Complexity
           </div>
         </div>
       </div>
