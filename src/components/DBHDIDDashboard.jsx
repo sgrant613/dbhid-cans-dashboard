@@ -1,37 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-// Simulated data for 14 CMHCs
+// Simulated data for 14 CMHCs (active clients snapshot - ~150K served annually)
 const cmhcData = [
-  { id: 1, name: "Four Rivers", region: 1, counties: 9, caseload: 342, avgIntakeComplexity: 2.4, outcomeImprovement: 11, alerts: 1, city: "Paducah" },
-  { id: 2, name: "RiverValley", region: 1, counties: 7, caseload: 289, avgIntakeComplexity: 2.1, outcomeImprovement: 14, alerts: 0, city: "Owensboro" },
-  { id: 3, name: "Pennyroyal", region: 1, counties: 9, caseload: 315, avgIntakeComplexity: 2.3, outcomeImprovement: 9, alerts: 0, city: "Hopkinsville" },
-  { id: 4, name: "Communicare", region: 2, counties: 8, caseload: 278, avgIntakeComplexity: 2.0, outcomeImprovement: 16, alerts: 0, city: "Elizabethtown" },
-  { id: 5, name: "LifeSkills", region: 2, counties: 10, caseload: 412, avgIntakeComplexity: 2.2, outcomeImprovement: 13, alerts: 0, city: "Bowling Green" },
-  { id: 6, name: "Adanta", region: 3, counties: 10, caseload: 267, avgIntakeComplexity: 2.5, outcomeImprovement: 8, alerts: 2, city: "Somerset" },
-  { id: 7, name: "Cumberland River", region: 3, counties: 13, caseload: 389, avgIntakeComplexity: 2.7, outcomeImprovement: 6, alerts: 3, city: "Corbin" },
-  { id: 8, name: "Kentucky River", region: 4, counties: 8, caseload: 298, avgIntakeComplexity: 2.8, outcomeImprovement: 5, alerts: 2, city: "Hazard" },
-  { id: 9, name: "Mountain Comprehensive", region: 4, counties: 6, caseload: 356, avgIntakeComplexity: 2.9, outcomeImprovement: 4, alerts: 3, city: "Prestonsburg" },
-  { id: 10, name: "Pathways", region: 5, counties: 12, caseload: 334, avgIntakeComplexity: 2.4, outcomeImprovement: 10, alerts: 1, city: "Ashland" },
-  { id: 11, name: "Comprehend", region: 5, counties: 8, caseload: 198, avgIntakeComplexity: 2.2, outcomeImprovement: 12, alerts: 0, city: "Maysville" },
-  { id: 12, name: "NorthKey", region: 6, counties: 6, caseload: 523, avgIntakeComplexity: 2.3, outcomeImprovement: 11, alerts: 1, city: "Covington" },
-  { id: 13, name: "Seven Counties", region: 6, counties: 7, caseload: 1247, avgIntakeComplexity: 2.5, outcomeImprovement: 9, alerts: 2, city: "Louisville" },
-  { id: 14, name: "New Vista", region: 7, counties: 17, caseload: 687, avgIntakeComplexity: 2.2, outcomeImprovement: 15, alerts: 0, city: "Lexington" },
+  { id: 1, name: "Four Rivers", region: 1, counties: 9, caseload: 2394, avgIntakeComplexity: 2.4, outcomeImprovement: 11, alerts: 1, city: "Paducah" },
+  { id: 2, name: "RiverValley", region: 1, counties: 7, caseload: 2023, avgIntakeComplexity: 2.1, outcomeImprovement: 14, alerts: 0, city: "Owensboro" },
+  { id: 3, name: "Pennyroyal", region: 1, counties: 9, caseload: 2205, avgIntakeComplexity: 2.3, outcomeImprovement: 9, alerts: 0, city: "Hopkinsville" },
+  { id: 4, name: "Communicare", region: 2, counties: 8, caseload: 1946, avgIntakeComplexity: 2.0, outcomeImprovement: 16, alerts: 0, city: "Elizabethtown" },
+  { id: 5, name: "LifeSkills", region: 2, counties: 10, caseload: 2884, avgIntakeComplexity: 2.2, outcomeImprovement: 13, alerts: 0, city: "Bowling Green" },
+  { id: 6, name: "Adanta", region: 3, counties: 10, caseload: 1869, avgIntakeComplexity: 2.5, outcomeImprovement: 8, alerts: 2, city: "Somerset" },
+  { id: 7, name: "Cumberland River", region: 3, counties: 13, caseload: 2723, avgIntakeComplexity: 2.7, outcomeImprovement: 6, alerts: 3, city: "Corbin" },
+  { id: 8, name: "Kentucky River", region: 4, counties: 8, caseload: 2086, avgIntakeComplexity: 2.8, outcomeImprovement: 5, alerts: 2, city: "Hazard" },
+  { id: 9, name: "Mountain Comprehensive", region: 4, counties: 6, caseload: 2492, avgIntakeComplexity: 2.9, outcomeImprovement: 4, alerts: 3, city: "Prestonsburg" },
+  { id: 10, name: "Pathways", region: 5, counties: 12, caseload: 2338, avgIntakeComplexity: 2.4, outcomeImprovement: 10, alerts: 1, city: "Ashland" },
+  { id: 11, name: "Comprehend", region: 5, counties: 8, caseload: 1386, avgIntakeComplexity: 2.2, outcomeImprovement: 12, alerts: 0, city: "Maysville" },
+  { id: 12, name: "NorthKey", region: 6, counties: 6, caseload: 3661, avgIntakeComplexity: 2.3, outcomeImprovement: 11, alerts: 1, city: "Covington" },
+  { id: 13, name: "Seven Counties", region: 6, counties: 7, caseload: 8729, avgIntakeComplexity: 2.5, outcomeImprovement: 9, alerts: 2, city: "Louisville" },
+  { id: 14, name: "New Vista", region: 7, counties: 17, caseload: 4809, avgIntakeComplexity: 2.2, outcomeImprovement: 15, alerts: 0, city: "Lexington" },
 ];
 
-// Complexity flow data (intake to outcome)
+// Complexity flow data (intake to outcome) - scaled to ~40K active clients
 const complexityFlowData = {
   intake: [
-    { level: "Critical (3)", count: 847, color: "#dc2626" },
-    { level: "Actionable (2)", count: 2156, color: "#f97316" },
-    { level: "Watchful (1)", count: 1523, color: "#eab308" },
-    { level: "None (0)", count: 609, color: "#22c55e" },
+    { level: "Critical (3)", count: 6692, color: "#dc2626" },
+    { level: "Actionable (2)", count: 17034, color: "#f97316" },
+    { level: "Watchful (1)", count: 12028, color: "#eab308" },
+    { level: "None (0)", count: 4791, color: "#22c55e" },
   ],
   outcome: [
-    { level: "Resolved", count: 2891, color: "#22c55e" },
-    { level: "Improved", count: 1456, color: "#84cc16" },
-    { level: "Stable", count: 534, color: "#eab308" },
-    { level: "Declined", count: 254, color: "#dc2626" },
+    { level: "Resolved", count: 22841, color: "#22c55e" },
+    { level: "Improved", count: 11503, color: "#84cc16" },
+    { level: "Stable", count: 4218, color: "#eab308" },
+    { level: "Declined", count: 1983, color: "#dc2626" },
   ]
 };
 
@@ -454,10 +454,10 @@ export default function DBHDIDDashboard() {
                   <div style={{ fontSize: '10px', color: '#94a3b8', marginBottom: '8px' }}>
                     {cmhc.city}
                   </div>
-                  <div style={{ fontSize: '9px', color: '#64748b', marginBottom: '3px' }}>
+                  <div style={{ fontSize: '12px', color: '#cbd5e1', marginBottom: '6px', fontWeight: '600', letterSpacing: '0.5px' }}>
                     Caseload / Complexity / Outcomes
                   </div>
-                  <div style={{ fontSize: '11px', fontWeight: '600', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: '14px', fontWeight: '700', whiteSpace: 'nowrap' }}>
                     <span style={{ color: '#e2e8f0' }}>{cmhc.caseload}</span> | <span style={{ color: cmhc.avgIntakeComplexity >= 2.5 ? '#f97316' : '#eab308' }}>{cmhc.avgIntakeComplexity.toFixed(1)}</span> | <span style={{ color: cmhc.outcomeImprovement >= 12 ? '#22c55e' : cmhc.outcomeImprovement >= 8 ? '#eab308' : '#f97316' }}>{cmhc.outcomeImprovement}%</span>
                   </div>
                 </div>
