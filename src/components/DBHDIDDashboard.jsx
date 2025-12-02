@@ -455,7 +455,7 @@ export default function DBHDIDDashboard() {
                     {cmhc.city}
                   </div>
                   <div style={{ fontSize: '12px', color: '#cbd5e1', marginBottom: '6px', fontWeight: '600', letterSpacing: '0.5px' }}>
-                    Caseload / Complexity / Outcomes
+                    Caseload / Complexity / Outcome Improvement
                   </div>
                   <div style={{ fontSize: '14px', fontWeight: '700', whiteSpace: 'nowrap' }}>
                     <span style={{ color: '#e2e8f0' }}>{cmhc.caseload}</span> | <span style={{ color: cmhc.avgIntakeComplexity >= 2.5 ? '#f97316' : '#eab308' }}>{cmhc.avgIntakeComplexity.toFixed(1)}</span> | <span style={{ color: cmhc.outcomeImprovement >= 12 ? '#22c55e' : cmhc.outcomeImprovement >= 8 ? '#eab308' : '#f97316' }}>{cmhc.outcomeImprovement}%</span>
