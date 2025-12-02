@@ -30,7 +30,7 @@ export default function App() {
                   : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
               }`}
             >
-              EHR Architecture
+              Cross-Center Aggregation
             </button>
           </div>
         </div>
